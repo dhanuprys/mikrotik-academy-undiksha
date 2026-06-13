@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String   // bcrypt hashed
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Event {
+  id            String         @id @default(cuid())
+  title         String         // e.g. "Pelatihan & Sertifikasi MikroTik 2026"
+  description   String?        @db.Text // rich description shown on public page
+  posterPath    String?        // path to uploaded poster image (private storage)
+  startDate     DateTime       // registration opens
+  endDate       DateTime       // registration closes
+  isActive      Boolean        @default(false) // only ONE event can be active at a time
+  isDraft       Boolean        @default(true)  // draft = hidden from public & future history
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  registrations Registration[]
+}
+
+model ProgramStudi {
+  id              String         @id @default(cuid())
+  name            String         @unique  // e.g. "S1 Sistem Informasi"
+  requiredCourses String         // e.g. "Jaringan Komputer + Jaringan Enterprise"
+  degree          String         // e.g. "S1", "D4"
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  registrations   Registration[]
+}
+
+model Registration {
+  id               String             @id @default(cuid())
+  nim              String
+  name             String
+  phone            String             // nomor HP aktif WA
+  programStudiId   String
+  programStudi     ProgramStudi       @relation(fields: [programStudiId], references: [id])
+  eventId          String
+  event            Event              @relation(fields: [eventId], references: [id])
+  paymentProofPath String             // path to uploaded bukti pembayaran
+  ktmPath          String             // path to uploaded KTM
+  status           RegistrationStatus @default(PENDING)
+  notes            String?            // admin notes
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  @@unique([nim, eventId]) // same NIM can register for different events
+}
+
+enum RegistrationStatus {
+  PENDING
+  CONTACTED
+  ACCEPTED
+  REJECTED
+}

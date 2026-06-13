@@ -12,15 +12,443 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
+
+/* ================================================================
+   FLOATING NAVIGATION
+   ================================================================ */
+.floating-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  height: 64px;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  background: transparent;
+}
+
+.floating-nav.nav-scrolled {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.nav-logo {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.nav-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
+.nav-logo:hover {
+  transform: scale(1.08) rotate(-2deg);
+}
+
+/* scroll-reveal is now handled by Framer Motion FadeIn component */
+
+/* ================================================================
+   HERO SECTION
+   ================================================================ */
+.hero-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+.hero-bg-gradient {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% 90%, rgba(37, 99, 235, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 50% at 80% 20%, rgba(14, 165, 233, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(99, 102, 241, 0.04) 0%, transparent 50%);
+}
+
+.hero-title {
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+}
+
+.hero-title .accent {
+  background: linear-gradient(135deg, #2563eb 0%, #0ea5e9 50%, #06b6d4 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% auto;
+  animation: shimmer 4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { background-position: 0% center; }
+  50% { background-position: 100% center; }
+}
+
+/* Hero entry animation */
+.hero-content {
+  animation: hero-enter 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes hero-enter {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-badge {
+  animation: hero-enter 1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+}
+
+.hero-desc {
+  animation: hero-enter 1s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
+}
+
+.hero-cta {
+  animation: hero-enter 1s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+}
+
+/* ================================================================
+   NETWORK GRID ANIMATION (Hero decoration)
+   ================================================================ */
+.network-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.grid-dot {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(37, 99, 235, 0.15);
+  animation: dot-pulse 3s ease-in-out infinite;
+}
+
+@keyframes dot-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.8); }
+}
+
+.grid-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.grid-line {
+  fill: none;
+  stroke: rgba(37, 99, 235, 0.08);
+  stroke-width: 1.5;
+  stroke-dasharray: 800;
+  stroke-dashoffset: 800;
+  animation: draw-line 4s ease-in-out infinite;
+}
+
+.line-1 { animation-delay: 0s; }
+.line-2 { animation-delay: 1.2s; }
+.line-3 { animation-delay: 2.4s; }
+
+@keyframes draw-line {
+  0% { stroke-dashoffset: 800; opacity: 0; }
+  10% { opacity: 1; }
+  50% { stroke-dashoffset: 0; opacity: 1; }
+  80% { stroke-dashoffset: -800; opacity: 0; }
+  100% { stroke-dashoffset: -800; opacity: 0; }
+}
+
+/* ================================================================
+   BENTO FEATURE CARDS
+   ================================================================ */
+.bento-card {
+  position: relative;
+  border-radius: 20px;
+  padding: 2rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.bento-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 1px;
+  background: linear-gradient(135deg, transparent, rgba(37, 99, 235, 0.15), transparent);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.bento-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 12px 40px rgba(37, 99, 235, 0.08),
+    0 4px 12px rgba(0, 0, 0, 0.04);
+  border-color: rgba(37, 99, 235, 0.15);
+}
+
+.bento-card:hover::before {
+  opacity: 1;
+}
+
+.bento-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bento-card:hover .bento-icon {
+  transform: scale(1.1) rotate(-3deg);
+}
+
+/* Large accent card */
+.bento-accent {
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  border-color: #334155;
+  color: #fff;
+}
+
+.bento-accent:hover {
+  border-color: #475569;
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* ================================================================
+   EVENT SHOWCASE
+   ================================================================ */
+.event-showcase {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+}
+
+.event-poster-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+.event-poster-wrap img {
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.event-showcase:hover .event-poster-wrap img {
+  transform: scale(1.03);
+}
+
+.event-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.event-status-pill .pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  position: relative;
+}
+
+.event-status-pill .pulse-dot::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  opacity: 0.4;
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.4; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+/* ================================================================
+   CTA BUTTON
+   ================================================================ */
+.cta-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 32px;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 16px;
+  color: #fff;
+  background: linear-gradient(135deg, #2563eb, #0ea5e9);
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+}
+
+.cta-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transition: left 0.6s ease;
+}
+
+.cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(37, 99, 235, 0.4);
+}
+
+.cta-btn:hover::before {
+  left: 100%;
+}
+
+.cta-btn:active {
+  transform: translateY(0);
+}
+
+.cta-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.cta-btn:hover svg {
+  transform: translateX(4px);
+}
+
+/* ================================================================
+   REQUIREMENTS TIMELINE
+   ================================================================ */
+.timeline-item {
+  position: relative;
+  padding-left: 2rem;
+}
+
+/* Timeline line is now rendered by ScrollProgressTimeline component */
+
+.timeline-dot {
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* timeline-dot hover is now scroll-driven via ScrollTimelineItem */
+
+/* ================================================================
+   PRODI CARDS
+   ================================================================ */
+.prodi-card {
+  position: relative;
+  padding: 1.25rem 1.5rem;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.prodi-card:hover {
+  background: #f0f9ff;
+  border-color: #bae6fd;
+}
+
+/* prodi-card border accent is now animated by ScrollProdiCard component */
+
+/* ================================================================
+   FOOTER
+   ================================================================ */
+.site-footer {
+  background: #0f172a;
+  position: relative;
+  overflow: hidden;
+}
+
+.site-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 400px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.4), transparent);
+}
+
+/* Count up is now handled by Framer Motion AnimatedNumber */
+
+/* ================================================================
+   RESPONSIVE FINE-TUNING
+   ================================================================ */
+@media (max-width: 640px) {
+  .hero-title {
+    font-size: 2.8rem;
+  }
+
+  .bento-card {
+    padding: 1.5rem;
+  }
+
+  .floating-nav {
+    height: 56px;
+  }
+
+  .cta-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* scroll-behavior removed to avoid conflict with Framer Motion scroll tracking */
