@@ -2,11 +2,8 @@ FROM node:22.22.2-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
-
-# Install dependencies
 COPY package.json package-lock.json ./
 RUN npm ci
 
@@ -22,8 +19,6 @@ RUN npx prisma generate
 
 # Disable Next.js telemetry
 ENV NEXT_TELEMETRY_DISABLED=1
-
-# Provide dummy environment variables so Next.js static evaluation doesn't crash during build
 ENV SESSION_SECRET=build_dummy_secret_do_not_use
 ENV DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy
 ENV CI=true
@@ -53,19 +48,21 @@ RUN mkdir .next
 RUN chown nextjs:nodejs .next
 
 # Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Copy Prisma schema and migrations for running them in production
+# Copy Prisma schema and migrations
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
-# Copy the prisma CLI for migrations
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/prisma ./node_modules/prisma
+
+# Install Prisma globally so we can run migrations in production
+RUN npm install -g prisma@6
+
+# Copy entrypoint script
+COPY --chown=nextjs:nodejs docker-entrypoint.sh ./docker-entrypoint.sh
 
 USER nextjs
 
 EXPOSE 3000
 ENV PORT=3000
 
-# Start script that runs migrations then starts Next.js
-CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]
+ENTRYPOINT ["./docker-entrypoint.sh"]
