@@ -1,3 +1,4 @@
+import { connection } from 'next/server'
 import { CACHE_TAGS } from '@/lib/cache-tags'
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
@@ -6,6 +7,7 @@ import { revalidateTag } from 'next/cache'
 import bcrypt from 'bcryptjs'
 
 export async function GET() {
+  await connection();
  const session = await getSession()
  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
@@ -17,6 +19,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  await connection();
  const session = await getSession()
  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 

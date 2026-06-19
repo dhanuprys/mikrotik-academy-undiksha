@@ -26,6 +26,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # Provide dummy environment variables so Next.js static evaluation doesn't crash during build
 ENV SESSION_SECRET=build_dummy_secret_do_not_use
 ENV DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy
+ENV CI=true
 
 # Build Next.js
 RUN npm run build

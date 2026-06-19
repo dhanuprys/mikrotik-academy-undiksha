@@ -3,7 +3,12 @@ import { Suspense } from 'react'
 import { AdminPageHeader } from '@/components/admin-page-header'
 import Link from 'next/link'
 
+import { connection } from 'next/server'
+
 export default async function DashboardPage() {
+  if (process.env.CI) {
+    await connection()
+  }
  const activeEvent = await getActiveEvent()
 
  if (!activeEvent) {

@@ -1,9 +1,11 @@
+import { connection } from 'next/server'
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { getSession } from '@/lib/auth'
 import * as xlsx from 'xlsx'
 
 export async function GET(request: Request) {
+  await connection();
  const session = await getSession()
  if (!session) return new NextResponse('Unauthorized', { status: 401 })
 

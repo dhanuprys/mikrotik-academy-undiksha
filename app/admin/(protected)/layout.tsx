@@ -1,3 +1,4 @@
+import { connection } from 'next/server';
 import { getSession } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
@@ -5,6 +6,9 @@ import LogoutButton from './logout-button'
 import { Suspense } from 'react'
 
 async function AdminContent({ children }: { children: React.ReactNode }) {
+    if (process.env.CI) {
+        await connection()
+    }
  const session = await getSession()
  
  if (!session) {

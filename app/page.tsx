@@ -12,8 +12,8 @@ import {
 import SmoothScrolling from '@/components/smooth-scrolling'
 
 async function HomeContent() {
-  const [activeEvent, prodis] = await Promise.all([getActiveEvent(), getProdiList()])
   await connection()
+  const [activeEvent, prodis] = await Promise.all([getActiveEvent(), getProdiList()])
 
   let registrationStatus = 'no-event'
   let ctaText = ''

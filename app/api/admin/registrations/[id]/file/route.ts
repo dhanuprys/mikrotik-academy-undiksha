@@ -1,3 +1,4 @@
+import { connection } from 'next/server'
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { getSession } from '@/lib/auth'
@@ -7,6 +8,7 @@ import fs from 'fs'
 const UPLOADS_DIR = path.join(process.cwd(), 'storage/uploads')
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  await connection();
  const session = await getSession()
  if (!session) return new NextResponse('Unauthorized', { status: 401 })
 

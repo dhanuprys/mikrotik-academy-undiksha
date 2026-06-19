@@ -6,6 +6,7 @@ import RegisterForm from './form'
 import { Suspense } from 'react'
 
 async function RegisterContent() {
+ await connection()
  const [activeEvent, prodis] = await Promise.all([
  getActiveEvent(),
  getProdiList()
@@ -15,7 +16,6 @@ async function RegisterContent() {
  redirect('/')
  }
 
- await connection()
  const now = new Date()
  if (now < activeEvent.startDate || now > activeEvent.endDate) {
  redirect('/')

@@ -1,3 +1,4 @@
+import { connection } from 'next/server'
 import { NextResponse } from 'next/server'
 import { getActiveEvent } from '@/lib/cache'
 import path from 'path'
@@ -6,6 +7,7 @@ import fs from 'fs'
 const UPLOADS_DIR = path.join(process.cwd(), 'storage/uploads')
 
 export async function GET(request: Request) {
+  await connection();
  const { searchParams } = new URL(request.url)
  const poster = searchParams.get('poster')
  const activeEvent = await getActiveEvent()

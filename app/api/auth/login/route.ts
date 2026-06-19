@@ -1,3 +1,4 @@
+import { connection } from 'next/server'
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
@@ -5,6 +6,7 @@ import { createSession } from '@/lib/auth'
 import { rateLimit } from '@/lib/rate-limit'
 
 export async function POST(request: Request) {
+  await connection();
  try {
  const body = await request.json()
  const { email, password } = body
