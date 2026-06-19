@@ -23,6 +23,9 @@ ENV SESSION_SECRET=build_dummy_secret_do_not_use
 ENV DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy
 ENV CI=true
 
+# Compile the seed script to JS for production use
+RUN npx tsc prisma/seed.ts --esModuleInterop --skipLibCheck || true
+
 # Build Next.js
 RUN npm run build
 
@@ -51,8 +54,10 @@ RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Copy Prisma schema and migrations
+# Copy Prisma schema, migrations and compiled seed
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+# Copy bcryptjs for the seed script
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/bcryptjs ./node_modules/bcryptjs
 
 # Install Prisma globally so we can run migrations in production
 RUN npm install -g prisma@6
