@@ -44,8 +44,6 @@ services:
     container_name: mikrotik_academy_db
     environment:
       <<: *db-credentials
-    ports:
-      - "5432:5432"
     volumes:
       # Map postgres data so the database persists across container restarts
       - postgres_data:/var/lib/postgresql/data
