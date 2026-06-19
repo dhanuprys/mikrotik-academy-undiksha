@@ -6,7 +6,10 @@ import fs from 'fs'
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
 const UPLOADS_DIR = path.join(process.cwd(), 'storage/uploads')
 
-export async function uploadFile(file: File, folder: 'posters' | 'payment' | 'ktm'): Promise<string> {
+export async function uploadFile(
+  file: File,
+  folder: 'posters' | 'payment' | 'ktm'
+): Promise<string> {
   if (file.size > MAX_FILE_SIZE) {
     throw new Error('File size exceeds 5MB limit.')
   }
@@ -28,7 +31,7 @@ export async function uploadFile(file: File, folder: 'posters' | 'payment' | 'kt
   }
 
   const dir = path.join(UPLOADS_DIR, folder)
-  
+
   if (!fs.existsSync(dir)) {
     await mkdir(dir, { recursive: true })
   }

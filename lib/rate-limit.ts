@@ -1,4 +1,4 @@
-const rateLimitCache = new Map<string, { count: number, resetAt: number }>()
+const rateLimitCache = new Map<string, { count: number; resetAt: number }>()
 
 export function rateLimit(identifier: string, limit: number, windowMs: number): boolean {
   const now = Date.now()

@@ -7,7 +7,7 @@ export async function getActiveEvent() {
   cacheLife('hours')
   cacheTag(CACHE_TAGS.ACTIVE_EVENT)
   return prisma.event.findFirst({
-    where: { isActive: true, isDraft: false }
+    where: { isActive: true, isDraft: false },
   })
 }
 
@@ -22,7 +22,7 @@ export async function getDashboardStats(eventId: string) {
   'use cache'
   cacheLife('minutes')
   cacheTag(CACHE_TAGS.DASHBOARD_STATS)
-  
+
   const [totalRegistrations, pending, contacted, accepted, rejected, byProdi] = await Promise.all([
     prisma.registration.count({ where: { eventId } }),
     prisma.registration.count({ where: { eventId, status: 'PENDING' } }),
@@ -32,19 +32,19 @@ export async function getDashboardStats(eventId: string) {
     prisma.registration.groupBy({
       by: ['programStudiId'],
       where: { eventId },
-      _count: { id: true }
-    })
+      _count: { id: true },
+    }),
   ])
 
   // Get prodi names for the grouping
-  const prodiIds = byProdi.map(p => p.programStudiId)
+  const prodiIds = byProdi.map((p) => p.programStudiId)
   const prodis = await prisma.programStudi.findMany({
-    where: { id: { in: prodiIds } }
+    where: { id: { in: prodiIds } },
   })
 
-  const registrationsByProdi = byProdi.map(p => ({
-    prodiName: prodis.find(pr => pr.id === p.programStudiId)?.name || 'Unknown',
-    count: p._count.id
+  const registrationsByProdi = byProdi.map((p) => ({
+    prodiName: prodis.find((pr) => pr.id === p.programStudiId)?.name || 'Unknown',
+    count: p._count.id,
   }))
 
   return {
@@ -53,23 +53,23 @@ export async function getDashboardStats(eventId: string) {
     contacted,
     accepted,
     rejected,
-    registrationsByProdi
+    registrationsByProdi,
   }
 }
 
 // Simple filter interface
 export interface RegistrationFilters {
-  eventId?: string;
-  status?: 'PENDING' | 'CONTACTED' | 'ACCEPTED' | 'REJECTED';
-  programStudiId?: string;
-  search?: string;
+  eventId?: string
+  status?: 'PENDING' | 'CONTACTED' | 'ACCEPTED' | 'REJECTED'
+  programStudiId?: string
+  search?: string
 }
 
 export async function getRegistrations(filters: RegistrationFilters) {
   'use cache'
   cacheLife('minutes')
   cacheTag(CACHE_TAGS.REGISTRATIONS)
-  
+
   const where: Record<string, unknown> = {}
   if (filters.eventId) where.eventId = filters.eventId
   if (filters.status) where.status = filters.status
@@ -77,7 +77,7 @@ export async function getRegistrations(filters: RegistrationFilters) {
   if (filters.search) {
     where.OR = [
       { nim: { contains: filters.search, mode: 'insensitive' } },
-      { name: { contains: filters.search, mode: 'insensitive' } }
+      { name: { contains: filters.search, mode: 'insensitive' } },
     ]
   }
 
@@ -85,9 +85,9 @@ export async function getRegistrations(filters: RegistrationFilters) {
     where,
     include: {
       programStudi: true,
-      event: true
+      event: true,
     },
-    orderBy: { createdAt: 'desc' }
+    orderBy: { createdAt: 'desc' },
   })
 }
 

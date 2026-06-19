@@ -1,8 +1,7 @@
 'use client'
 
-
 import { useEffect, useRef, useState, useCallback, createContext, useContext } from 'react'
-import { useMediaQuery } from "./hooks";
+import { useMediaQuery } from './hooks'
 import Link from 'next/link'
 import {
   motion,
@@ -16,7 +15,6 @@ import {
   MotionValue,
 } from 'framer-motion'
 
-
 const ease: [number, number, number, number] = [0.16, 1, 0.3, 1]
 // ── FLOATING NAV ──
 export function FloatingNav() {
@@ -26,7 +24,7 @@ export function FloatingNav() {
 
   return (
     <motion.nav
-      className="fixed top-0 left-0 right-0 z-50 h-16"
+      className="fixed top-0 right-0 left-0 z-50 h-16"
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease }}
@@ -41,19 +39,25 @@ export function FloatingNav() {
         }}
         transition={{ duration: 0.35 }}
       />
-      <div className="relative max-w-7xl mx-auto px-5 sm:px-8 flex justify-between items-center h-full">
+      <div className="relative mx-auto flex h-full max-w-7xl items-center justify-between px-5 sm:px-8">
         <div className="flex items-center gap-3">
-          <motion.div className="nav-logo" whileHover={{ scale: 1.1, rotate: -3 }} whileTap={{ scale: 0.95 }}>
+          <motion.div
+            className="nav-logo"
+            whileHover={{ scale: 1.1, rotate: -3 }}
+            whileTap={{ scale: 0.95 }}
+          >
             <img src="/undiksha-logo.png" alt="Undiksha Logo" />
           </motion.div>
-          <span className="text-[15px] font-bold tracking-tight text-slate-900">MikroTik Academy</span>
+          <span className="text-[15px] font-bold tracking-tight text-slate-900">
+            MikroTik Academy
+          </span>
         </div>
         <div className="hidden sm:block">
           <Link href="/register">
-            <motion.button 
+            <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-bold px-5 py-2 rounded-full shadow-md hover:shadow-lg transition-all"
+              className="rounded-full bg-blue-600 px-5 py-2 text-[13px] font-bold text-white shadow-md transition-all hover:bg-blue-700 hover:shadow-lg"
             >
               Daftar Sekarang
             </motion.button>
@@ -69,7 +73,10 @@ export function NetworkGrid() {
   return (
     <div className="network-grid" aria-hidden="true">
       {Array.from({ length: 35 }).map((_, i) => (
-        <motion.div key={i} className="grid-dot" style={{ left: `${(i % 7) * 16.66}%`, top: `${Math.floor(i / 7) * 20}%` }}
+        <motion.div
+          key={i}
+          className="grid-dot"
+          style={{ left: `${(i % 7) * 16.66}%`, top: `${Math.floor(i / 7) * 20}%` }}
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: [0.2, 0.7, 0.2], scale: [1, 1.6, 1] }}
           transition={{ duration: 3, repeat: Infinity, delay: i * 0.12, ease: 'easeInOut' }}
@@ -87,23 +94,51 @@ export function NetworkGrid() {
 // ── HERO TITLE (staggered chars) ──
 export function HeroTitle() {
   return (
-    <motion.h1 className="hero-title mb-8" initial="hidden" animate="visible"
-      variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.03, delayChildren: 0.2 } } }}>
+    <motion.h1
+      className="hero-title mb-8"
+      initial="hidden"
+      animate="visible"
+      variants={{
+        hidden: {},
+        visible: { transition: { staggerChildren: 0.03, delayChildren: 0.2 } },
+      }}
+    >
       {'Bangun Keahlian'.split('').map((c, i) => (
-        <motion.span key={`l1-${i}`} className="inline-block"
-          variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease } } }}>
+        <motion.span
+          key={`l1-${i}`}
+          className="inline-block"
+          variants={{
+            hidden: { opacity: 0, y: 30 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease } },
+          }}
+        >
           {c === ' ' ? '\u00A0' : c}
         </motion.span>
       ))}
       <br />
-      <motion.span className="accent inline-block"
-        variants={{ hidden: { opacity: 0, y: 40, scaleX: 0.8 }, visible: { opacity: 1, y: 0, scaleX: 1, transition: { duration: 0.8, ease, delay: 0.4 } } }}>
+      <motion.span
+        className="accent inline-block"
+        variants={{
+          hidden: { opacity: 0, y: 40, scaleX: 0.8 },
+          visible: { opacity: 1, y: 0, scaleX: 1, transition: { duration: 0.8, ease, delay: 0.4 } },
+        }}
+      >
         Network Engineering
       </motion.span>
       <br />
       {'Bertaraf Global'.split('').map((c, i) => (
-        <motion.span key={`l3-${i}`} className="inline-block"
-          variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease, delay: 0.6 + i * 0.02 } } }}>
+        <motion.span
+          key={`l3-${i}`}
+          className="inline-block"
+          variants={{
+            hidden: { opacity: 0, y: 30 },
+            visible: {
+              opacity: 1,
+              y: 0,
+              transition: { duration: 0.5, ease, delay: 0.6 + i * 0.02 },
+            },
+          }}
+        >
           {c === ' ' ? '\u00A0' : c}
         </motion.span>
       ))}
@@ -112,15 +147,33 @@ export function HeroTitle() {
 }
 
 // ── FADE IN ──
-export function FadeIn({ children, className = '', delay = 0, direction = 'up' }: {
-  children: React.ReactNode; className?: string; delay?: number; direction?: 'up' | 'down' | 'left' | 'right'
+export function FadeIn({
+  children,
+  className = '',
+  delay = 0,
+  direction = 'up',
+}: {
+  children: React.ReactNode
+  className?: string
+  delay?: number
+  direction?: 'up' | 'down' | 'left' | 'right'
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, margin: '-60px' })
-  const dirs = { up: { y: 40, x: 0 }, down: { y: -40, x: 0 }, left: { x: 50, y: 0 }, right: { x: -50, y: 0 } }
+  const dirs = {
+    up: { y: 40, x: 0 },
+    down: { y: -40, x: 0 },
+    left: { x: 50, y: 0 },
+    right: { x: -50, y: 0 },
+  }
   return (
-    <motion.div ref={ref} className={className} initial={{ opacity: 0, ...dirs[direction] }}
-      animate={isInView ? { opacity: 1, x: 0, y: 0 } : {}} transition={{ duration: 0.7, ease, delay }}>
+    <motion.div
+      ref={ref}
+      className={className}
+      initial={{ opacity: 0, ...dirs[direction] }}
+      animate={isInView ? { opacity: 1, x: 0, y: 0 } : {}}
+      transition={{ duration: 0.7, ease, delay }}
+    >
       {children}
     </motion.div>
   )
@@ -136,17 +189,26 @@ export function FloatingStatCards() {
   const opOut = useTransform(scrollY, [200, 600], [1, 0])
 
   return (
-    <motion.div className="hidden lg:flex absolute right-8 top-1/2 -translate-y-1/2 flex-col gap-5 w-56" style={{ x: xOut, opacity: opOut }}>
-      {[{ y: y1, d: 0.5, v: 'MTCNA', l: 'Sertifikasi Internasional', c: 'text-slate-900' },
+    <motion.div
+      className="absolute top-1/2 right-8 hidden w-56 -translate-y-1/2 flex-col gap-5 lg:flex"
+      style={{ x: xOut, opacity: opOut }}
+    >
+      {[
+        { y: y1, d: 0.5, v: 'MTCNA', l: 'Sertifikasi Internasional', c: 'text-slate-900' },
         { y: y2, d: 0.65, v: '100%', l: 'Hands-on Practice', c: 'text-slate-900' },
-        { y: y3, d: 0.8, v: 'RouterOS', l: 'Real Equipment Lab', c: 'text-blue-600' }
+        { y: y3, d: 0.8, v: 'RouterOS', l: 'Real Equipment Lab', c: 'text-blue-600' },
       ].map((s, i) => (
-        <motion.div key={i} className="bg-white rounded-2xl p-5 border border-slate-100 shadow-lg shadow-slate-200/50"
-          initial={{ opacity: 0, x: 60 }} animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, ease, delay: s.d }} style={{ y: s.y }}
-          whileHover={{ scale: 1.05, boxShadow: '0 16px 40px rgba(37,99,235,0.12)' }}>
+        <motion.div
+          key={i}
+          className="rounded-2xl border border-slate-100 bg-white p-5 shadow-lg shadow-slate-200/50"
+          initial={{ opacity: 0, x: 60 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease, delay: s.d }}
+          style={{ y: s.y }}
+          whileHover={{ scale: 1.05, boxShadow: '0 16px 40px rgba(37,99,235,0.12)' }}
+        >
           <p className={`text-3xl font-extrabold ${s.c}`}>{s.v}</p>
-          <p className="text-sm text-slate-500 mt-1">{s.l}</p>
+          <p className="mt-1 text-sm text-slate-500">{s.l}</p>
         </motion.div>
       ))}
     </motion.div>
@@ -162,7 +224,7 @@ export function ParallaxFooter({ children }: { children: React.ReactNode }) {
         whileInView={{ y: 0, opacity: 1 }}
         viewport={{ once: true, margin: '-20px' }}
         transition={{ duration: 0.7, ease }}
-        className="max-w-7xl mx-auto px-5 sm:px-8"
+        className="mx-auto max-w-7xl px-5 sm:px-8"
       >
         {children}
       </motion.div>
@@ -171,7 +233,13 @@ export function ParallaxFooter({ children }: { children: React.ReactNode }) {
 }
 
 // ── TILT CARD ──
-export function TiltCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+export function TiltCard({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
   const isMobile = useMediaQuery('(max-width: 768px)')
   const ref = useRef<HTMLDivElement>(null)
   const mx = useMotionValue(0)
@@ -186,34 +254,62 @@ export function TiltCard({ children, className = '' }: { children: React.ReactNo
     mx.set((e.clientX - rect.left) / rect.width - 0.5)
     my.set((e.clientY - rect.top) / rect.height - 0.5)
   }
-  const handleMouseLeave = () => { mx.set(0); my.set(0) }
+  const handleMouseLeave = () => {
+    mx.set(0)
+    my.set(0)
+  }
 
   return (
     <motion.div
       onMouseMove={handleMouse}
       onMouseLeave={handleMouseLeave}
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+      style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
       className={`transition-all duration-200 ease-linear ${className}`}
     >
-      <div style={{ transform: "translateZ(30px)" }}>
-        {children}
-      </div>
+      <div style={{ transform: 'translateZ(30px)' }}>{children}</div>
     </motion.div>
   )
 }
 
 // ── MAGNETIC BUTTON ──
-export function MagneticButton({ children, className = '', href }: { children: React.ReactNode; className?: string; href?: string }) {
+export function MagneticButton({
+  children,
+  className = '',
+  href,
+}: {
+  children: React.ReactNode
+  className?: string
+  href?: string
+}) {
   const ref = useRef<HTMLDivElement>(null)
-  const x = useMotionValue(0); const y = useMotionValue(0)
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
   const sx = useSpring(x, { stiffness: 200, damping: 15 })
   const sy = useSpring(y, { stiffness: 200, damping: 15 })
 
   return (
-    <motion.div ref={ref} style={{ x: sx, y: sy }} className="inline-block"
-      onMouseMove={(e) => { const r = ref.current?.getBoundingClientRect(); if (!r) return; x.set((e.clientX - r.left - r.width / 2) * 0.15); y.set((e.clientY - r.top - r.height / 2) * 0.15) }}
-      onMouseLeave={() => { x.set(0); y.set(0) }}>
-      {href ? <a href={href} className={className}>{children}</a> : <div className={className}>{children}</div>}
+    <motion.div
+      ref={ref}
+      style={{ x: sx, y: sy }}
+      className="inline-block"
+      onMouseMove={(e) => {
+        const r = ref.current?.getBoundingClientRect()
+        if (!r) return
+        x.set((e.clientX - r.left - r.width / 2) * 0.15)
+        y.set((e.clientY - r.top - r.height / 2) * 0.15)
+      }}
+      onMouseLeave={() => {
+        x.set(0)
+        y.set(0)
+      }}
+    >
+      {href ? (
+        <a href={href} className={className}>
+          {children}
+        </a>
+      ) : (
+        <div className={className}>{children}</div>
+      )}
     </motion.div>
   )
 }

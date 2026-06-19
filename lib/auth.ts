@@ -61,6 +61,6 @@ export async function getSession() {
   if (!payload || !payload.userId) {
     return null
   }
-  
+
   return payload
 }

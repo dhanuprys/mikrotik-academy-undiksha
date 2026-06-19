@@ -11,16 +11,16 @@ x-app-credentials: &app-credentials
   SESSION_SECRET: TolongGanti # Run: openssl rand -hex 32
 
 x-app-ports: &app-ports
-  - "3000:3000" # HOST -> app (3000)
+  - '3000:3000' # HOST -> app (3000)
 ###############################################################
 
 x-common-config: &common-config
   restart: unless-stopped
   logging:
-    driver: "json-file"
+    driver: 'json-file'
     options:
-      max-size: "10m"
-      max-file: "3"
+      max-size: '10m'
+      max-file: '3'
 
 services:
   app:
@@ -48,7 +48,7 @@ services:
       # Map postgres data so the database persists across container restarts
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U mikrotik -d mikrotik_db"]
+      test: ['CMD-SHELL', 'pg_isready -U mikrotik -d mikrotik_db']
       interval: 5s
       timeout: 5s
       retries: 5

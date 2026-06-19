@@ -6,28 +6,27 @@ import RegisterForm from './form'
 import { Suspense } from 'react'
 
 async function RegisterContent() {
- await connection()
- const [activeEvent, prodis] = await Promise.all([
- getActiveEvent(),
- getProdiList()
- ])
+  await connection()
+  const [activeEvent, prodis] = await Promise.all([getActiveEvent(), getProdiList()])
 
- if (!activeEvent) {
- redirect('/')
- }
+  if (!activeEvent) {
+    redirect('/')
+  }
 
- const now = new Date()
- if (now < activeEvent.startDate || now > activeEvent.endDate) {
- redirect('/')
- }
+  const now = new Date()
+  if (now < activeEvent.startDate || now > activeEvent.endDate) {
+    redirect('/')
+  }
 
- return <RegisterForm prodis={prodis} />
+  return <RegisterForm prodis={prodis} />
 }
 
 export default function RegisterPageWrapper() {
- return (
- <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
- <RegisterContent />
- </Suspense>
- )
+  return (
+    <Suspense
+      fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}
+    >
+      <RegisterContent />
+    </Suspense>
+  )
 }

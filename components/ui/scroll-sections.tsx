@@ -1,5 +1,5 @@
 'use client'
-import { NetworkGrid } from "./layout-animations";
+import { NetworkGrid } from './layout-animations'
 import { useEffect, useRef, useState, useCallback, createContext, useContext } from 'react'
 import Link from 'next/link'
 import {
@@ -14,7 +14,6 @@ import {
   MotionValue,
 } from 'framer-motion'
 
-
 const ease: [number, number, number, number] = [0.16, 1, 0.3, 1]
 // ── SCROLL ZOOM HERO ──
 export function ScrollZoomHero({ children }: { children: React.ReactNode }) {
@@ -27,7 +26,10 @@ export function ScrollZoomHero({ children }: { children: React.ReactNode }) {
 
   return (
     <section ref={ref} className="hero-section">
-      <motion.div className="absolute inset-0 origin-center will-change-transform" style={{ scale, borderRadius, overflow: 'hidden' }}>
+      <motion.div
+        className="absolute inset-0 origin-center will-change-transform"
+        style={{ scale, borderRadius, overflow: 'hidden' }}
+      >
         <div className="hero-bg-gradient" />
         <NetworkGrid />
       </motion.div>
@@ -39,14 +41,32 @@ export function ScrollZoomHero({ children }: { children: React.ReactNode }) {
 }
 
 // ── HERO PARALLAX LAYER ──
-export function HeroParallaxLayer({ children, speed = 1, className = '' }: { children: React.ReactNode; speed?: number; className?: string }) {
+export function HeroParallaxLayer({
+  children,
+  speed = 1,
+  className = '',
+}: {
+  children: React.ReactNode
+  speed?: number
+  className?: string
+}) {
   const { scrollY } = useScroll()
   const y = useTransform(scrollY, [0, 600], [0, -80 * speed])
-  return <motion.div className={className} style={{ y }}>{children}</motion.div>
+  return (
+    <motion.div className={className} style={{ y }}>
+      {children}
+    </motion.div>
+  )
 }
 
 // ── SCROLL-VELOCITY MARQUEE ──
-export function ScrollLinkedMarquee({ children, baseSpeed = 1 }: { children: React.ReactNode; baseSpeed?: number }) {
+export function ScrollLinkedMarquee({
+  children,
+  baseSpeed = 1,
+}: {
+  children: React.ReactNode
+  baseSpeed?: number
+}) {
   const baseX = useMotionValue(0)
   const { scrollY } = useScroll()
   const scrollVelocity = useVelocity(scrollY)
@@ -67,8 +87,11 @@ export function ScrollLinkedMarquee({ children, baseSpeed = 1 }: { children: Rea
 
   return (
     <div className="overflow-hidden">
-      <motion.div className="flex whitespace-nowrap gap-8" style={{ x, skewX }}>
-        {children}{children}{children}{children}
+      <motion.div className="flex gap-8 whitespace-nowrap" style={{ x, skewX }}>
+        {children}
+        {children}
+        {children}
+        {children}
       </motion.div>
     </div>
   )
@@ -77,38 +100,40 @@ export function ScrollLinkedMarquee({ children, baseSpeed = 1 }: { children: Rea
 // ── DARK TEXT REVEAL SECTION (for the new black section) ──
 export function DarkTextReveal({ children }: { children: React.ReactNode }) {
   const containerRef = useRef<HTMLDivElement>(null)
-  
+
   // Track scroll through the dark section
-  const { scrollYProgress } = useScroll({ 
-    target: containerRef, 
-    offset: ['start end', 'end start'] 
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start end', 'end start'],
   })
-  
+
   // Smooth the scroll for the spotlight
   const smoothProgress = useSpring(scrollYProgress, { damping: 30, stiffness: 100 })
-  
+
   // The spotlight moves from the top (connected to the previous section) all the way to the bottom
   const spotlightY = useTransform(smoothProgress, [0, 1], ['-20%', '120%'])
   const spotlightScale = useTransform(smoothProgress, [0, 0.5, 1], [0.8, 1.2, 0.8])
 
   return (
-    <div ref={containerRef} className="relative bg-slate-950 text-white pb-32 pt-40 overflow-hidden">
+    <div
+      ref={containerRef}
+      className="relative overflow-hidden bg-slate-950 pt-40 pb-32 text-white"
+    >
       {/* Scroll-following Spotlight that looks like it leaked from the previous section */}
-      <motion.div 
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] max-w-[1200px] h-[800px] pointer-events-none rounded-full blur-[140px] mix-blend-screen opacity-40"
-        style={{ 
-          background: 'radial-gradient(ellipse at center, rgba(37,99,235,1) 0%, rgba(139,92,246,0.5) 50%, transparent 100%)',
+      <motion.div
+        className="pointer-events-none absolute top-0 left-1/2 h-[800px] w-[100vw] max-w-[1200px] -translate-x-1/2 rounded-full opacity-40 mix-blend-screen blur-[140px]"
+        style={{
+          background:
+            'radial-gradient(ellipse at center, rgba(37,99,235,1) 0%, rgba(139,92,246,0.5) 50%, transparent 100%)',
           y: spotlightY,
-          scale: spotlightScale
-        }} 
+          scale: spotlightScale,
+        }}
       />
-      
+
       {/* Ambient static glow at the very top edge to blend the seam */}
-      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-blue-500/10 to-transparent pointer-events-none" />
-      
-      <div className="max-w-4xl mx-auto px-5 sm:px-8 relative z-10">
-        {children}
-      </div>
+      <div className="pointer-events-none absolute top-0 right-0 left-0 h-32 bg-gradient-to-b from-blue-500/10 to-transparent" />
+
+      <div className="relative z-10 mx-auto max-w-4xl px-5 sm:px-8">{children}</div>
     </div>
   )
 }
@@ -119,7 +144,7 @@ export function RevealParagraph({ children }: { children: React.ReactNode }) {
     target: ref,
     offset: ['start 0.8', 'start 0.3'],
   })
-  
+
   const opacity = useTransform(scrollYProgress, [0, 1], [0.15, 1])
   const y = useTransform(scrollYProgress, [0, 1], [20, 0])
 
@@ -127,7 +152,7 @@ export function RevealParagraph({ children }: { children: React.ReactNode }) {
     <motion.p
       ref={ref}
       style={{ opacity, y }}
-      className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight mb-16 last:mb-0"
+      className="mb-16 text-3xl leading-tight font-extrabold tracking-tight last:mb-0 sm:text-4xl lg:text-5xl"
     >
       {children}
     </motion.p>
@@ -139,13 +164,13 @@ export function ScrollProgressTimeline({ children }: { children: React.ReactNode
   return (
     <div className="relative">
       {/* Progress line */}
-      <div className="absolute left-[7px] top-0 bottom-0 w-[2px] bg-slate-100">
+      <div className="absolute top-0 bottom-0 left-[7px] w-[2px] bg-slate-100">
         <motion.div
           initial={{ height: '0%' }}
           whileInView={{ height: '100%' }}
           viewport={{ once: true, margin: '-50px' }}
           transition={{ duration: 1.5, ease: 'easeOut' }}
-          className="w-full bg-gradient-to-b from-blue-600 to-cyan-500 origin-top"
+          className="w-full origin-top bg-gradient-to-b from-blue-600 to-cyan-500"
         />
       </div>
       {children}
@@ -154,8 +179,14 @@ export function ScrollProgressTimeline({ children }: { children: React.ReactNode
 }
 
 // ── SCROLL TIMELINE ITEM ──
-export function ScrollTimelineItem({ children, index, className = '' }: {
-  children: React.ReactNode; index: number; className?: string
+export function ScrollTimelineItem({
+  children,
+  index,
+  className = '',
+}: {
+  children: React.ReactNode
+  index: number
+  className?: string
 }) {
   return (
     <motion.div
@@ -192,7 +223,7 @@ export function ScrollProdiCard({ children, index }: { children: React.ReactNode
         whileInView={{ width: 4 }}
         viewport={{ once: true, margin: '-40px' }}
         transition={{ duration: 0.5, ease, delay: 0.2 + index * 0.1 }}
-        className="absolute left-0 top-[20%] bottom-[20%] rounded bg-gradient-to-b from-blue-600 to-cyan-500"
+        className="absolute top-[20%] bottom-[20%] left-0 rounded bg-gradient-to-b from-blue-600 to-cyan-500"
       />
       {children}
     </motion.div>
