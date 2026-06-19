@@ -1,4 +1,5 @@
 'use client'
+import { MagneticButton } from "./layout-animations";
 
 import { useEffect, useRef, useState, useCallback, createContext, useContext } from 'react'
 import Link from 'next/link'

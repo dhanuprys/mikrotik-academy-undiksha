@@ -1,6 +1,8 @@
 'use client'
 
+
 import { useEffect, useRef, useState, useCallback, createContext, useContext } from 'react'
+import { useMediaQuery } from "./hooks";
 import Link from 'next/link'
 import {
   motion,
@@ -14,8 +16,6 @@ import {
   MotionValue,
 } from 'framer-motion'
 
-// Context to share scroll progress between wrapper and cards
-export const EventScrollContext = createContext<MotionValue<number> | null>(null)
 
 const ease: [number, number, number, number] = [0.16, 1, 0.3, 1]
 // ── FLOATING NAV ──

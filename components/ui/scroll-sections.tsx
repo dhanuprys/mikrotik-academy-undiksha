@@ -1,5 +1,5 @@
 'use client'
-
+import { NetworkGrid } from "./layout-animations";
 import { useEffect, useRef, useState, useCallback, createContext, useContext } from 'react'
 import Link from 'next/link'
 import {
@@ -14,8 +14,6 @@ import {
   MotionValue,
 } from 'framer-motion'
 
-// Context to share scroll progress between wrapper and cards
-export const EventScrollContext = createContext<MotionValue<number> | null>(null)
 
 const ease: [number, number, number, number] = [0.16, 1, 0.3, 1]
 // ── SCROLL ZOOM HERO ──
