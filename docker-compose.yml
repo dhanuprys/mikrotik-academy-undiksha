@@ -25,9 +25,7 @@ x-common-config: &common-config
 services:
   app:
     <<: *common-config
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: dhanuprys/mikrotik-academy-undiksha:latest
     container_name: mikrotik_academy_app
     ports:
       <<: *app-ports
